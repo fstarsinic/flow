@@ -1,0 +1,32 @@
+{
+    "MorningRoutine": [
+      {
+        "actionType": "PrintAction",
+        "condition": "result === 'completed'",
+        "nextAction": "continue"
+      },
+      {
+        "actionType": "SleepAction",
+        "condition": "result === 'completed' && state.lastSleepDuration < 3",
+        "nextAction": "repeat"
+      },
+      {
+        "actionType": "SleepAction",
+        "condition": "result === 'completed' && state.lastSleepDuration >= 3",
+        "nextAction": "next"
+      }
+    ],
+    "EveningRoutine": [
+      {
+        "actionType": "PrintAction",
+        "condition": "result === 'completed'",
+        "nextAction": "next"
+      },
+      {
+        "actionType": "SleepAction",
+        "condition": "result === 'completed'",
+        "nextAction": "halt"
+      }
+    ]
+  }
+  

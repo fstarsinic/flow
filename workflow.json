@@ -1,0 +1,49 @@
+{
+    "Workcases": {
+      "MorningRoutine": {
+        "Actions": [
+          {
+            "Type": "PrintAction",
+            "Params": {
+              "message": "Good morning!"
+            }
+          },
+          {
+            "Type": "SleepAction",
+            "Params": {
+              "duration": 2
+            }
+          },
+          {
+            "Type": "PrintAction",
+            "Params": {
+              "message": "Time for breakfast."
+            }
+          }
+        ]
+      },
+      "EveningRoutine": {
+        "Actions": [
+          {
+            "Type": "PrintAction",
+            "Params": {
+              "message": "Good evening!"
+            }
+          },
+          {
+            "Type": "SleepAction",
+            "Params": {
+              "duration": 3
+            }
+          },
+          {
+            "Type": "PrintAction",
+            "Params": {
+              "message": "Time to relax."
+            }
+          }
+        ]
+      }
+    }
+  }
+  

@@ -1,0 +1,24 @@
+{
+  "name": "flow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start:dev": "ts-node src/main.ts | pino-pretty"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "@types/pino": "^7.0.5",
+    "jsonata": "^2.0.4",
+    "pino": "^8.19.0",
+    "pino-pretty": "^11.0.0"
+  }
+}
