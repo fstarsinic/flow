@@ -2,7 +2,7 @@ import { WorkflowExecutor } from './WorkflowExecutor';
 import { RulesProcessor } from './RulesProcessor';
 import * as fs from 'fs';
 import { argv } from 'process';
-
+import minimist from 'minimist';
 
 const pino = require('pino');
 const logger = pino({ transport: { target: "pino-pretty", }, });
@@ -13,6 +13,8 @@ logger.info('Hello, this is an info log!');
 
 async function main(workflowConfigFile: string, rulesConfigFile: string, workcaseName: string) {
     try {
+        logger.info('Reading the workflow configuration file')
+        logger.info(workcaseName);
         // Load the workflow configuration file
         const configFileContent = fs.readFileSync(workflowConfigFile, { encoding: 'utf8' }) as unknown as string;
         const workflowDefinition = JSON.parse(configFileContent);
@@ -22,8 +24,9 @@ async function main(workflowConfigFile: string, rulesConfigFile: string, workcas
         await rulesProcessor.loadRules();
 
         // Assume WorkflowExecutor has been modified to accept a RulesProcessor instance
-        logger.info('Creating a new WorkflowExecutor instance')
-        const executor = new WorkflowExecutor(workflowDefinition.Workcases, rulesProcessor);
+        //logger.info('Creating a new WorkflowExecutor instance')
+        //const executor = new WorkflowExecutor(workflowDefinition.Workcases, rulesProcessor);
+        const wf = new Workflow(workflowConfigFile, rulesConfigFile, workcaseName);
 
         // Execute a specific workcase to start the workflow
         logger.info('Executing the MorningRoutine workcase')
@@ -35,7 +38,10 @@ async function main(workflowConfigFile: string, rulesConfigFile: string, workcas
 
 
 if (require.main === module) {
-    console.log(argv[2])
-    main('./workflow.json', './rules.json', argv[2]).catch(console.error);
+
+    const argv = minimist(process.argv.slice(2));
+
+    console.log(argv)
+    main('./workflow.json', './rules.json', argv.workcase).catch(console.error);
 }
 

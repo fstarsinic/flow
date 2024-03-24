@@ -20,6 +20,7 @@ export class WorkflowState {
         });
     }
 
+
     printState() {
         console.log(this.state);
     }
