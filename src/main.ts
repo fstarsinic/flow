@@ -3,9 +3,8 @@ import { RulesProcessor } from './RulesProcessor';
 import * as fs from 'fs';
 import { argv } from 'process';
 
-const pino = require('pino');
 
-// Create a logger instance
+const pino = require('pino');
 const logger = pino({ transport: { target: "pino-pretty", }, });
 
 // Write a log statement
