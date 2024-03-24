@@ -4,7 +4,7 @@ import { Action } from '../IAction'; // Import the Action interface
 class IncrementCounterAction implements Action {
     initialize(params: any): void {
         // Initialization logic here
-    }
+    }   
 
    // Adjusting the WorkflowState type to an any type
     async execute(state: any): Promise<string> {
