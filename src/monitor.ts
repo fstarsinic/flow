@@ -1,4 +1,16 @@
 import { EventEmitter } from 'events';
+import path from 'path';
+import { P } from 'pino';
+// Create a logger instance
+import pino from 'pino';
+const log = pino({ transport: { target: "pino-pretty", }, });
+// Use path.extname to get the extension of the current file
+const fileExtension = path.extname(__filename);
+// Use path.basename with the dynamic extension to get the filename without the extension
+const fileNameWithoutExtension = path.basename(__filename, fileExtension);
+const logger = log.child({
+    name: fileNameWithoutExtension,
+  });
 
 class VisitorMonitor extends EventEmitter {
     private activeVisitors: number = 0;
@@ -11,28 +23,28 @@ class VisitorMonitor extends EventEmitter {
     }
 
     async start() {
-            console.log('Processing active visitors.');
-            console.log(`Active visitors: ${this.activeVisitors}`);
+            logger.info('Processing active visitors.');
+            logger.info(`Active visitors: ${this.activeVisitors}`);
     }   
  
     private updateState = (p: {}) => {
-        console.log('State changed');
-        console.log(p)
+        logger.info('State changed');
+        logger.info(p)
         this.start()
 
     }
 
     subscribe = (p: {}) => {
         this.activeVisitors += 1;
-        console.log(`Visitor added. Active visitors: ${this.activeVisitors}`);
-        console.log(p)
+        logger.info(`Visitor added. Active visitors: ${this.activeVisitors}`);
+        logger.info(p)
         // Process visitor immediately or perform some action
         this.start();
     }
 
     private unsubscribe = () => {
         this.activeVisitors = Math.max(0, this.activeVisitors - 1);
-        console.log(`Visitor left. Active visitors: ${this.activeVisitors}`);
+        logger.info(`Visitor left. Active visitors: ${this.activeVisitors}`);
     }
 
     public simulateNewVisitor1() {

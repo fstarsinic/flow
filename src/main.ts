@@ -3,19 +3,16 @@ import { RulesProcessor } from './RulesProcessor';
 import * as fs from 'fs';
 import minimist, { ParsedArgs } from 'minimist';
 import { Workflow } from './Workflow';
-import { P } from 'pino';
+import path from 'path';
 
+import { P } from 'pino';
 // Create a logger instance
 import pino from 'pino';
 const log = pino({ transport: { target: "pino-pretty", }, });
-import path from 'path';
-
 // Use path.extname to get the extension of the current file
 const fileExtension = path.extname(__filename);
 // Use path.basename with the dynamic extension to get the filename without the extension
 const fileNameWithoutExtension = path.basename(__filename, fileExtension);
-
-
 const logger = log.child({
     name: fileNameWithoutExtension,
   });
@@ -70,7 +67,7 @@ if (require.main === module) {
     const argv = minimist(process.argv.slice(2));
     logger.info(argv)
 
-    console.log(argv)
+    logger.info(argv)
     main(argv).catch(console.error);
 }
 

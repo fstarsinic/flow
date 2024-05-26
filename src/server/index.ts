@@ -1,5 +1,17 @@
 import express from 'express';
 import { taskStatus } from '../scheduler/index'; // Import taskStatus from scheduler.js
+import path from 'path';
+import { P } from 'pino';
+// Create a logger instance
+import pino from 'pino';
+const log = pino({ transport: { target: "pino-pretty", }, });
+// Use path.extname to get the extension of the current file
+const fileExtension = path.extname(__filename);
+// Use path.basename with the dynamic extension to get the filename without the extension
+const fileNameWithoutExtension = path.basename(__filename, fileExtension);
+const logger = log.child({
+    name: fileNameWithoutExtension,
+  });
 
 // Import the scheduler to ensure tasks are scheduled
 //require('./scheduler');
@@ -23,6 +35,6 @@ app.get('/status', (req, res) => {
 
 export const startServer = () => {
   app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    logger.info(`Server running on http://localhost:${PORT}`);
   });
 };

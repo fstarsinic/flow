@@ -1,4 +1,17 @@
-export class WorkflowState {
+import path from 'path';
+import { P } from 'pino';
+// Create a logger instance
+import pino from 'pino';
+const log = pino({ transport: { target: "pino-pretty", }, });
+// Use path.extname to get the extension of the current file
+const fileExtension = path.extname(__filename);
+// Use path.basename with the dynamic extension to get the filename without the extension
+const fileNameWithoutExtension = path.basename(__filename, fileExtension);
+const logger = log.child({
+    name: fileNameWithoutExtension,
+  });
+
+  export class WorkflowState {
     private state: { [key: string]: any } = {};
 
     constructor() {
@@ -22,6 +35,6 @@ export class WorkflowState {
 
 
     printState() {
-        console.log(this.state);
+        logger.info(this.state);
     }
 }
