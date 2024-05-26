@@ -1,9 +1,27 @@
 import { Action } from "../IAction";
+import { BaseAction } from "./BaseAction";
 
-export default class ErrorAction implements Action {
+
+// Create a logger instance
+import pino from 'pino';
+const log = pino({ transport: { target: "pino-pretty", }, });
+import path from 'path';
+
+// Use path.extname to get the extension of the current file
+const fileExtension = path.extname(__filename);
+// Use path.basename with the dynamic extension to get the filename without the extension
+const fileNameWithoutExtension = path.basename(__filename, fileExtension);
+
+
+const logger = log.child({
+    name: fileNameWithoutExtension,
+  });
+
+export default class ErrorAction extends BaseAction implements Action {
   private message: string;
 
   constructor() {
+    super();
     this.message = "error";
   }
 
@@ -11,7 +29,7 @@ export default class ErrorAction implements Action {
     this.message = params.message;
   }
 
-  async execute(state: any): Promise<string> {
+  async perform(state: any): Promise<string> {
     console.log(this.message);
     return this.message;
   }
@@ -19,4 +37,9 @@ export default class ErrorAction implements Action {
   describe(): string {
     return `Produces an error: ${this}`;
   }
+
+  getType(): string {
+    return "ErrorAction";
+  }
+  
 }

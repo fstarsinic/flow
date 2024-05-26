@@ -5,7 +5,7 @@
           {
             "Type": "PrintAction",
             "Params": {
-              "message": "Good morning ${name}!"
+              "message": "Good morning {{name}}!"
             }
           },
           {
@@ -13,21 +13,29 @@
             "Params": {
               "duration": 2
             }
-          },
+          },  
           {
             "Type": "PrintAction",
             "Params": {
-              "message": "Time for breakfast."
+              "message": "Time for breakfast {{name}}."
             }
+          }
+        ],
+        "RulesSource": "inline",
+        "Rules": [
+          {
+            "ActionType": "PrintAction",
+            "Condition": "result === 'success'",
+            "Outcome": "continue"
           }
         ]
       },
       "EveningRoutine": {
         "Actions": [
-          {
+          { 
             "Type": "PrintAction",
             "Params": {
-              "message": "Good evening!"
+              "message": "Good evening {{name}}!"
             }
           },
           {
@@ -42,7 +50,9 @@
               "message": "Time to relax."
             }
           }
-        ]
+        ],
+        "RulesSource": "file",
+        "RulesFile": "rules.json"  
       }
     },
     "PrintAndAppendRoutine": {
@@ -60,7 +70,9 @@
             "contentToAppend": "Hello, world!"
           }
         }
-      ]
+      ],
+      "RulesSource": "file",
+      "RulesFile": "fileCreationRules.json"
     },
     "FileCreationRoutine": {
       "Actions": [
@@ -76,7 +88,9 @@
             "message": "File created successfully."
           }
         }
-      ]
+      ],
+      "RulesSource": "file",
+      "RulesFile": "fileCreationRules.json"
     }
   }
   

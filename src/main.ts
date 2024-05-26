@@ -1,36 +1,64 @@
 import { WorkflowExecutor } from './WorkflowExecutor';
 import { RulesProcessor } from './RulesProcessor';
 import * as fs from 'fs';
-import { argv } from 'process';
-import minimist from 'minimist';
+import minimist, { ParsedArgs } from 'minimist';
+import { Workflow } from './Workflow';
+import { P } from 'pino';
 
-const pino = require('pino');
-const logger = pino({ transport: { target: "pino-pretty", }, });
+// Create a logger instance
+import pino from 'pino';
+const log = pino({ transport: { target: "pino-pretty", }, });
+import path from 'path';
 
-// Write a log statement
-logger.info('Hello, this is an info log!');
+// Use path.extname to get the extension of the current file
+const fileExtension = path.extname(__filename);
+// Use path.basename with the dynamic extension to get the filename without the extension
+const fileNameWithoutExtension = path.basename(__filename, fileExtension);
 
 
-async function main(workflowConfigFile: string, rulesConfigFile: string, workcaseName: string) {
+const logger = log.child({
+    name: fileNameWithoutExtension,
+  });
+
+logger.info('Starting the workflow engine');
+
+//async function main(workflowConfigFile: string, rulesConfigFile: string, workcaseName: string) {
+    async function main(argv: ParsedArgs) {
     try {
         logger.info('Reading the workflow configuration file')
-        logger.info(workcaseName);
+        logger.info(argv.workcase);
+        logger.info(argv.workflow);
+        logger.info(argv.rules);
+        const workflowConfigFile = `${process.env.WF}/${argv.workflow}.json`;
+        const rulesConfigFile = `${process.env.WF}/${argv.rules}.json`;
+
+        // Define the initial state based on command-line arguments
+        const initialState = {
+        ...argv  // Spread all parsed arguments into the state
+    };
+
+        logger.info(workflowConfigFile);
+        logger.info(rulesConfigFile);
         // Load the workflow configuration file
         const configFileContent = fs.readFileSync(workflowConfigFile, { encoding: 'utf8' }) as unknown as string;
         const workflowDefinition = JSON.parse(configFileContent);
 
-        // Instantiate the RulesProcessor with the rules file path
+        // Load the rules configuration file
+        const rulesFileContent = fs.readFileSync(rulesConfigFile, { encoding: 'utf8' }) as unknown as string;
+        const rulesDefinition = JSON.parse(rulesFileContent);
+        
         const rulesProcessor = new RulesProcessor(rulesConfigFile);
         await rulesProcessor.loadRules();
+        logger.info('Rules loaded successfully')
 
-        // Assume WorkflowExecutor has been modified to accept a RulesProcessor instance
-        //logger.info('Creating a new WorkflowExecutor instance')
-        //const executor = new WorkflowExecutor(workflowDefinition.Workcases, rulesProcessor);
-        const wf = new Workflow(workflowConfigFile, rulesConfigFile, workcaseName);
+        const workflowExecutor = new WorkflowExecutor(workflowDefinition, rulesProcessor, initialState);
+        logger.info(`Executing workcase: ${argv.workcase}`)
+        await workflowExecutor.executeWorkcase(argv.workcase);
+        logger.info('Workcase executed successfully')
 
-        // Execute a specific workcase to start the workflow
-        logger.info('Executing the MorningRoutine workcase')
-        await executor.executeWorkcase(workcaseName || "MorningRoutine");
+        // Instantiate the RulesProcessor with the rules file path
+        const wf = new Workflow(workflowConfigFile, argv._);
+
     } catch (error) {
         console.error("Failed to execute the workflow:", error);
     }
@@ -40,8 +68,9 @@ async function main(workflowConfigFile: string, rulesConfigFile: string, workcas
 if (require.main === module) {
 
     const argv = minimist(process.argv.slice(2));
+    logger.info(argv)
 
     console.log(argv)
-    main('./workflow.json', './rules.json', argv.workcase).catch(console.error);
+    main(argv).catch(console.error);
 }
 

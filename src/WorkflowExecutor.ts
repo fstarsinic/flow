@@ -4,54 +4,63 @@ import ActionFactory  from './ActionFactory';
 import { RulesProcessor } from './RulesProcessor';
 import { ActionType } from './types/ActionType';
 
-const pino = require('pino');
 
 // Create a logger instance
-const logger = pino({ transport: { target: "pino-pretty", }, });
+import pino from 'pino';
+const log = pino({ transport: { target: "pino-pretty", }, });
+import path from 'path';
 
+// Use path.extname to get the extension of the current file
+const fileExtension = path.extname(__filename);
+// Use path.basename with the dynamic extension to get the filename without the extension
+const fileNameWithoutExtension = path.basename(__filename, fileExtension);
+
+
+const logger = log.child({
+    name: fileNameWithoutExtension,
+  });
 
 
 export class WorkflowExecutor {
-    private workcases: any; // Adjust to your workcase structure
+    private workflow: any; // Adjust to your workcase structure
     private rules: Rule[] = [];
     private rulesProcessor: RulesProcessor;
+    private state: any;
 
-    constructor(workcases: any, rulesProcessor: RulesProcessor) {
-        this.workcases = workcases;
+    constructor(workflow: any, rulesProcessor: RulesProcessor, state: any) {
+        this.workflow = workflow;
         this.rulesProcessor = rulesProcessor;
+        this.state = state;
 
-        logger.debug('WorkflowExecutor constructor');
-        logger.debug(`Workcases: ${JSON.stringify(workcases)}`);
+        logger.info('WorkflowExecutor constructor');
+        //logger.info(`Workcases: ${JSON.stringify(workcases)}`);
     }
 
 
-    async executeWorkcase(workcaseName: string) {
-        const workcase = this.workcases[workcaseName];
-        logger.debug(`executeWorkcase(${workcaseName})`)
+    async executeWorkcase(workcaseName: string): Promise<void> {
+        const workcase = this.workflow['Workcases'][workcaseName];
+        logger.info(`executeWorkcase(${workcaseName})`)
+        logger.info(this.workflow['Workcases'][workcaseName])
         const initializedActions: ActionType[] = [];
 
-        logger.debug('type of workcase actions');
-        logger.debug(typeof workcase.Actions);
-        logger.debug('workcase');
-        logger.debug(workcase);
+        logger.info('workcase');
+        logger.info(workcase);
 
-        logger.debug(`First loop: Initialize all actions`);
+        logger.info(`First loop: Initialize all actions`);
         for (const action of workcase.Actions) {
-            logger.debug('type of action');
-            logger.debug(typeof action);
-            logger.debug(`Initializing action: ${action.Type}`)
-            const actionInstance = await ActionFactory.createAction(action.Type);
+            logger.info(`Initializing action: ${action.Type}`)
+            const actionInstance = await ActionFactory.createAction(action.Type, action.Params);
             actionInstance.initialize(action.Params);
             const actionType: ActionType = {type: action.Type, action: actionInstance};
-            logger.debug(`pushing action: ${actionType.type}`)
+            logger.info(`pushing action: ${actionType.type}`)
             initializedActions.push(actionType);
             actionInstance.describe();
         }
       
-        logger.debug(`Second loop: Execute all actions`);
+        logger.info(`Second loop: Execute all actions`);
         for (const { action, type } of initializedActions) {
-            logger.debug(`Executing action: ${type}`);
-            const result = await (action as Action).execute( {} );
+            logger.info(`Executing action: ${type}`);
+            const result = await (action as Action).execute(this.state);
     
             // Process rules after each action's execution
             const nextStep = this.rulesProcessor.processRules(workcaseName, type, result, {});

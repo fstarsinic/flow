@@ -1,9 +1,20 @@
 import fs from 'fs';
 import { promisify } from 'util';
-const pino = require('pino');
 
 // Create a logger instance
-const logger = pino({ transport: { target: "pino-pretty", }, });
+import pino from 'pino';
+const log = pino({ transport: { target: "pino-pretty", }, });
+import path from 'path';
+
+// Use path.extname to get the extension of the current file
+const fileExtension = path.extname(__filename);
+// Use path.basename with the dynamic extension to get the filename without the extension
+const fileNameWithoutExtension = path.basename(__filename, fileExtension);
+
+
+const logger = log.child({
+    name: fileNameWithoutExtension,
+  });
 
 const readFileAsync = promisify(fs.readFile);
 

@@ -1,23 +1,35 @@
 import { Action } from './IAction';
 
-const pino = require('pino');
 
 // Create a logger instance
-const logger = pino({ transport: { target: "pino-pretty", }, });
+import pino from 'pino';
+const log = pino({ transport: { target: "pino-pretty", }, });
+import path from 'path';
+
+// Use path.extname to get the extension of the current file
+const fileExtension = path.extname(__filename);
+// Use path.basename with the dynamic extension to get the filename without the extension
+const fileNameWithoutExtension = path.basename(__filename, fileExtension);
+
+
+const logger = log.child({
+    name: fileNameWithoutExtension,
+  });
 
 
 export default class ActionFactory {
 
 
-    static async createAction(actionName: string): Promise<Action> {
+    static async createAction(actionName: string, params: any): Promise<Action> {
 
-      logger.debug(`ActionFactory.createAction(${actionName})`);
+      logger.info(`ActionFactory.createAction(${actionName})`);
 
       try {
         const modulePath = `./actions/${actionName}`;
+        logger.info(`Loading action module: ${modulePath}`);
         const actionModule = await import(modulePath);
         const inst = new actionModule.default() as Action;
-        logger.debug(Reflect.ownKeys(inst));
+        logger.info(Reflect.ownKeys(inst));
 
         return inst as Action;
       } catch (error) {
