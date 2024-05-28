@@ -41,7 +41,7 @@
           {
             "Type": "SleepAction",
             "Params": {
-              "duration": 3
+              "duration": 1
             }
           },
           {

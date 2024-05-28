@@ -30,7 +30,7 @@ export default class ErrorAction extends BaseAction implements Action {
   }
 
   async perform(state: any): Promise<string> {
-    logger.info(this.message);
+    logger.debug(this.message);
     return this.message;
   }
 

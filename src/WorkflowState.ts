@@ -35,6 +35,6 @@ const logger = log.child({
 
 
     printState() {
-        logger.info(this.state);
+        logger.debug(this.state);
     }
 }

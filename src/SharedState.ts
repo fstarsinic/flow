@@ -26,7 +26,7 @@ const logger = log.child({
         this.counter = lastState.counter;
         this.lastSleepDuration = lastState.lastSleepDuration;
       } else {
-        logger.info("No previous state to rollback to.");
+        logger.debug("No previous state to rollback to.");
       }
     }
   }

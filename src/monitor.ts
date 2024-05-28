@@ -23,28 +23,28 @@ class VisitorMonitor extends EventEmitter {
     }
 
     async start() {
-            logger.info('Processing active visitors.');
-            logger.info(`Active visitors: ${this.activeVisitors}`);
+            logger.debug('Processing active visitors.');
+            logger.debug(`Active visitors: ${this.activeVisitors}`);
     }   
  
     private updateState = (p: {}) => {
-        logger.info('State changed');
-        logger.info(p)
+        logger.debug('State changed');
+        logger.debug(p)
         this.start()
 
     }
 
     subscribe = (p: {}) => {
         this.activeVisitors += 1;
-        logger.info(`Visitor added. Active visitors: ${this.activeVisitors}`);
-        logger.info(p)
+        logger.debug(`Visitor added. Active visitors: ${this.activeVisitors}`);
+        logger.debug(p)
         // Process visitor immediately or perform some action
         this.start();
     }
 
     private unsubscribe = () => {
         this.activeVisitors = Math.max(0, this.activeVisitors - 1);
-        logger.info(`Visitor left. Active visitors: ${this.activeVisitors}`);
+        logger.debug(`Visitor left. Active visitors: ${this.activeVisitors}`);
     }
 
     public simulateNewVisitor1() {

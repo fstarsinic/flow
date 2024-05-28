@@ -15,9 +15,9 @@ const logger = log.child({
 
 
 // Start the web server
-logger.info('starting server');
+logger.debug('starting server');
 startServer();
 
 // Start the scheduler
-logger.info('starting scheduler')
+logger.debug('starting scheduler')
 startScheduler();

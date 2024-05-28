@@ -30,7 +30,7 @@ export const startScheduler = () => {
 // Schedule Task 1
 schedule.scheduleJob('*/10 * * * * *', () => {
     updateTaskStatus('Task1', 'running');
-    logger.info('Task1 is running');
+    logger.debug('Task1 is running');
     // Simulate task work with a timeout
     setTimeout(() => updateTaskStatus('Task1', 'sleeping'), 5000);
 });
@@ -38,7 +38,7 @@ schedule.scheduleJob('*/10 * * * * *', () => {
 // Schedule Task 2
 schedule.scheduleJob('*/15 * * * * *', () => {
   updateTaskStatus('Task2', 'running');
-  logger.info('Task2 is running');
+  logger.debug('Task2 is running');
   // Simulate task work with a timeout
   setTimeout(() => updateTaskStatus('Task2', 'sleeping'), 7000);
 });

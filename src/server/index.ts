@@ -35,6 +35,6 @@ app.get('/status', (req, res) => {
 
 export const startServer = () => {
   app.listen(PORT, () => {
-    logger.info(`Server running on http://localhost:${PORT}`);
+    logger.debug(`Server running on http://localhost:${PORT}`);
   });
 };

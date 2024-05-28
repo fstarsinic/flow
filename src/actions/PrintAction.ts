@@ -26,18 +26,18 @@ export default class PrintAction extends BaseAction implements Action {
 
   /*initialize(params: { message: string }): void {
     super.initialize(params);
-    logger.info(`PrintAction.initialize(${params.message})`);
+    logger.debug(`PrintAction.initialize(${params.message})`);
     this.message = params.message;
   }*/
 
   async perform(state: any): Promise<string> {
-    logger.info('PrintAction.execute()');
-    logger.info('Message:', state.message);
+    logger.debug('PrintAction.perform()');
+    logger.debug('Message:', state.message);
     return "completed";
   }
 
   describe(): string {
-    return `Prints a message: ${this.message}`;
+    return `This action prints a message: ${this.message}`;
   }
 
   getType(): string {

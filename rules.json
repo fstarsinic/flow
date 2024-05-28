@@ -7,12 +7,12 @@
       },
       {
         "actionType": "SleepAction",
-        "condition": "result === 'completed' && state.lastSleepDuration < 3",
+        "condition": "result === 'completed' && state.lastSleepDuration < 30",
         "nextAction": "repeat"
       },
       {
         "actionType": "SleepAction",
-        "condition": "result === 'completed' && state.lastSleepDuration >= 3",
+        "condition": "result === 'completed' && state.lastSleepDuration >= 30",
         "nextAction": "next"
       }
     ],

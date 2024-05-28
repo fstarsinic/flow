@@ -25,21 +25,22 @@ export default class SleepAction extends BaseAction implements Action{
     }
   
     initialize(params: { duration: number }): void {
-      logger.info(`SleepAction.initialize(${params.duration})`);
+      logger.debug(`SleepAction.initialize(${params.duration})`);
       this.duration = params.duration;
     }
   
     async perform(state: any): Promise<string> {
-      logger.info(state);
-      logger.info(`SleepAction.execute(${state})`)
-      logger.info(`Sleeping for ${this.duration} second(s).`);
+      logger.debug(state);
+      logger.debug(`SleepAction.perform(${state})`)
+      logger.debug(`Sleeping for ${this.duration} second(s).`);
       await new Promise(resolve => setTimeout(resolve, this.duration * 1000));
-      state.lastSleepDuration = this.duration;
-      return "completed";
+      state.lastSleepDuration = this.duration++;  
+      logger.debug(`Setting lastSleepDuration to ${state.lastSleepDuration} second(s).`);
+      return "done";
     }
   
     describe(): string {
-      return `Sleeps for ${this.duration} second(s)`;
+      return `This action sleeps for ${this.duration} second(s)`;
     }
 
     getType(): string {

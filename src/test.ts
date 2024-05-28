@@ -21,8 +21,8 @@ state.print = { name: "Example Print" };
 state.print.name = "Updated Print Name";
 
 // Accessing properties
-logger.info(state.counter); // Outputs: 2
-logger.info(state.print.name); // Outputs: "Updated Print Name"
+logger.debug(state.counter); // Outputs: 2
+logger.debug(state.print.name); // Outputs: "Updated Print Name"
 
 // Using defined methods
 state.printState(); // Outputs the current state

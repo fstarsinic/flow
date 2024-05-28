@@ -18,14 +18,14 @@ interface IAction {
   
   class ActionOne implements IAction {
     performAction() {
-      logger.info("ActionOne is running");
+      logger.debug("ActionOne is running");
       // Additional logic
     }
   }
   
   class ActionTwo implements IAction {
     performAction() {
-      logger.info("ActionTwo is running");
+      logger.debug("ActionTwo is running");
       // Additional logic
     }
   }
